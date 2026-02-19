@@ -1,0 +1,623 @@
+<?php
+/**
+ * DK Laserman Theme - Functions
+ * 
+ * @package DK_Laserman
+ * @version 2026.01
+ */
+
+if (!defined('ABSPATH')) exit;
+
+/**
+ * Theme Setup
+ */
+function dk_setup() {
+    add_theme_support('title-tag');
+    add_theme_support('post-thumbnails');
+    add_theme_support('html5', array('search-form', 'comment-form', 'comment-list', 'gallery', 'caption'));
+    
+    register_nav_menus(array(
+        'primary' => __('Menú Principal', 'dk-laserman'),
+    ));
+}
+add_action('after_setup_theme', 'dk_setup');
+
+/**
+ * Enqueue Scripts & Styles
+ */
+function dk_scripts() {
+    // Google Fonts
+    wp_enqueue_style('dk-fonts', 'https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&family=DM+Sans:wght@100..1000&display=swap', array(), null);
+    
+    // Tailwind CSS
+    wp_enqueue_script('tailwindcss', 'https://cdn.tailwindcss.com', array(), '3.4', false);
+    
+    // Theme styles
+    wp_enqueue_style('dk-style', get_stylesheet_uri(), array(), '2026.01');
+    
+    // Tailwind config
+    wp_add_inline_script('tailwindcss', "
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['DM Sans', 'sans-serif'],
+                        display: ['Unbounded', 'sans-serif'],
+                    },
+                    colors: {
+                        neon: '#00ff1d',
+                        dark: '#090f0a',
+                        surface: '#0c140d'
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'glow-pulse': 'glowPulse 2s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        glowPulse: {
+                            '0%, 100%': { boxShadow: '0 0 20px rgba(0, 255, 29, 0.3)' },
+                            '50%': { boxShadow: '0 0 40px rgba(0, 255, 29, 0.6)' },
+                        }
+                    }
+                }
+            }
+        }
+    ");
+}
+add_action('wp_enqueue_scripts', 'dk_scripts');
+
+/**
+ * Site Data Configuration
+ */
+function dk_get_site_data() {
+    $uploads = 'https://laserman.com.ar/wp-content/uploads/2025';
+    $uploads_old = 'https://laserman.com.ar/inicio/wp-content/uploads/2025/08';
+    
+    return array(
+        // Contact
+        'whatsapp' => '+5492995920418',
+        'whatsapp_display' => '299 592 0418',
+        'email' => 'info@laserman.com.ar',
+        'phone' => '+54 9 299 592 0418',
+        'location' => 'Neuquén, Patagonia Argentina',
+        'instagram' => 'https://www.instagram.com/laseryshow/',
+        
+        // Images
+        'hero_image' => 'https://laserman.com.ar/wp-content/uploads/2026/01/Video_Realista_Backstage_Subida_Escenario.mp4_snapshot_00.07.721.jpg',
+        'tuneles_image' => $uploads . '/12/Imagen-de-WhatsApp-2025-05-12-a-las-20.07.43_2440bd38.jpg',
+        'mapping_image' => $uploads . '/12/IMG-20251104-WA0002.jpg',
+        'sponsors_image' => $uploads . '/12/IMG-20250809-WA00121.jpg',
+        'custom_image' => $uploads . '/12/Generated-Image-October-29-2025-8_45AM-e1765355240381.png',
+        
+        // Videos
+        'laserman_video' => 'https://youtube.com/shorts/UejPB4htjps',
+        'tuneles_video' => 'https://youtube.com/shorts/ToSEWX40VYk',
+        
+        // Logos
+        'logo_rionegro' => 'https://laserman.com.ar/wp-content/uploads/2026/01/LOGO-rio-negro.png',
+        'logo_misiones' => 'https://laserman.com.ar/wp-content/uploads/2026/01/LOGO-misiones.png',
+        'logo_formosa' => 'https://laserman.com.ar/wp-content/uploads/2026/01/LOGO-formosa.png',
+        'logo_neuquen' => 'https://laserman.com.ar/wp-content/uploads/2026/01/LOGO-NEUQUEN2.png',
+        
+        // Brand logos
+        'brand_logos' => array(
+            $uploads_old . '/klipartz.com_.png',
+            $uploads_old . '/sancor-2-scaled.png',
+            $uploads_old . '/banco-patagonia.png',
+            $uploads_old . '/bpn-nuestro.png',
+            $uploads_old . '/logo-casinos-del-rio.png',
+        ),
+        
+        // Stats
+        'stats' => array(
+            array('number' => '15+', 'label' => 'Años'),
+            array('number' => '50+', 'label' => 'Fiestas Nacionales'),
+            array('number' => '∞', 'label' => 'Momentos Únicos'),
+        ),
+        
+        // Services
+        'services' => array(
+            array(
+                'id' => 'laserman',
+                'icon' => '⚡',
+                'title' => 'Show Laserman',
+                'description' => 'El único en Argentina - Performance futurista con rayos láser en vivo',
+                'image' => 'https://laserman.com.ar/wp-content/uploads/2026/01/ChatGPT-Image-20-ene-2026-05_23_02-p.m.png',
+            ),
+            array(
+                'id' => 'tuneles',
+                'icon' => '🚪',
+                'title' => 'Túneles de Ingreso',
+                'description' => 'Transformá la entrada en una experiencia inmersiva de luz',
+                'image' => $uploads . '/12/Imagen-de-WhatsApp-2025-05-12-a-las-20.07.43_2440bd38.jpg',
+            ),
+            array(
+                'id' => 'mapping',
+                'icon' => '🏔️',
+                'title' => 'Mapping Láser',
+                'description' => 'Proyecciones sobre edificios, monumentos y montañas',
+                'image' => $uploads . '/12/IMG-20251104-WA0002.jpg',
+            ),
+            array(
+                'id' => 'sponsors',
+                'icon' => '💰',
+                'title' => 'Sponsors & Marcas',
+                'description' => 'Logos proyectados a escala monumental para patrocinadores',
+                'image' => $uploads . '/12/IMG-20250809-WA00121.jpg',
+            ),
+            array(
+                'id' => 'custom',
+                'icon' => '🎨',
+                'title' => 'Experiencia Custom',
+                'description' => 'Co-creamos experiencias únicas según tu visión',
+                'image' => '',
+            ),
+        ),
+        
+        // Festivals
+        'festivals' => array(
+            array('name' => 'Fiesta del Chocolate', 'location' => 'Bariloche, Río Negro'),
+            array('name' => 'Fiesta del Pionero', 'location' => 'Centenario, Neuquén'),
+            array('name' => 'Fiesta de la Navidad', 'location' => 'Leandro N. Alem, Misiones'),
+            array('name' => 'Fiesta del Tomate', 'location' => 'Lamarque, Río Negro'),
+            array('name' => 'Fiesta del Chef Patagónico', 'location' => 'Villa Pehuenia, Neuquén'),
+            array('name' => 'Fiesta de la Actividad Física', 'location' => 'Cipolletti, Río Negro'),
+        ),
+        
+        // Testimonials
+        'testimonials' => array(
+            array(
+                'quote' => 'Rompimos los moldes de lo tradicional. Fue algo disruptivo que logró captar la atención, sobre todo de los jóvenes.',
+                'name' => 'Julieta Corroza',
+                'role' => 'Ministra de Desarrollo Humano, Neuquén',
+            ),
+            array(
+                'quote' => 'Nunca se vio algo así. Es único, innovador. La gente filma, saca fotos. Las proyecciones se viralizan solas.',
+                'name' => 'Juan Cruz',
+                'role' => 'Jefe de Prensa, Fiesta del Pionero',
+            ),
+            array(
+                'quote' => 'La profesionalidad y el impacto del show superaron nuestras expectativas. Fue el punto más comentado del evento.',
+                'name' => 'Productora de Shows',
+                'role' => 'Buenos Aires',
+            ),
+        ),
+        
+        // Segments
+        'segments' => array(
+            array(
+                'id' => 'municipal',
+                'icon' => '🏛️',
+                'title' => 'Fiesta Nacional',
+                'subtitle' => 'Municipal, Provincial',
+                'quality' => 'hot',
+                'enabled' => true,
+            ),
+            array(
+                'id' => 'corporativo',
+                'icon' => '🏢',
+                'title' => 'Corporativo',
+                'subtitle' => 'Empresas, Lanzamientos',
+                'quality' => 'hot',
+                'enabled' => true,
+            ),
+            array(
+                'id' => 'festival',
+                'icon' => '🎤',
+                'title' => 'Festival',
+                'subtitle' => 'Productores, Boliches',
+                'quality' => 'hot',
+                'enabled' => true,
+            ),
+            array(
+                'id' => 'social',
+                'icon' => '🎂',
+                'title' => 'Evento Social',
+                'subtitle' => '15 años, Casamientos',
+                'quality' => 'excluded',
+                'enabled' => false,
+            ),
+        ),
+    );
+}
+
+/**
+ * Footer Scripts - Tracking & Interactions
+ */
+function dk_footer_scripts() {
+    ?>
+    <script>
+    // ==========================================
+    // GENERADOR DE EVENT_ID ÚNICO PARA DEDUPLICACIÓN
+    // ==========================================
+    function generateEventId() {
+        const timestamp = Date.now();
+        const random = Math.random().toString(36).substr(2, 9);
+        return `laserman_${timestamp}_${random}`;
+    }
+
+    // ==========================================
+    // HELPER PARA LEER COOKIES
+    // ==========================================
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
+    }
+
+    // ==========================================
+    // TRACKING SYSTEM
+    // ==========================================
+    function trackEvent(eventName, params = {}, userData = null) {
+        // Generar event_id automáticamente si no existe
+        if (!params.event_id) {
+            params.event_id = generateEventId();
+        }
+
+        const eventData = {
+            event: eventName,
+            timestamp: new Date().toISOString(),
+            page_url: window.location.href,
+            ...params
+        };
+
+        // Si hay user_data, agregarlo
+        if (userData) {
+            eventData.user_data = userData;
+        }
+
+        console.log('📊 Event:', eventName, params, userData ? '+ user_data' : '');
+
+        // Meta Pixel - enviar event_id para deduplicación
+        if (typeof fbq === 'function') {
+            const fbqParams = { ...params, eventID: params.event_id };
+            if (['PageView', 'ViewContent', 'Lead', 'InitiateContact'].includes(eventName)) {
+                fbq('track', eventName, fbqParams);
+            } else {
+                fbq('trackCustom', eventName, fbqParams);
+            }
+        }
+
+        // GTM dataLayer
+        if (window.dataLayer) {
+            window.dataLayer.push(eventData);
+        }
+
+        // Local storage
+        try {
+            let events = JSON.parse(localStorage.getItem('dk_events') || '[]');
+            events.push(eventData);
+            if (events.length > 100) events = events.slice(-100);
+            localStorage.setItem('dk_events', JSON.stringify(events));
+        } catch (e) {}
+    }
+
+    // ==========================================
+    // SEGMENTATION
+    // ==========================================
+    function selectSegment(segmentType, leadQuality) {
+        trackEvent('SegmentSelection', {
+            segment_type: segmentType,
+            lead_quality: leadQuality
+        });
+
+        if (segmentType === 'social') {
+            document.getElementById('excludedMessage').classList.remove('hidden');
+            trackEvent('LeadExcluded', { reason: 'social_event' });
+            return;
+        }
+
+        document.getElementById('excludedMessage').classList.add('hidden');
+        sessionStorage.setItem('user_segment', segmentType);
+        sessionStorage.setItem('lead_quality', leadQuality);
+
+        // Navegar a sección específica según el tipo de segmento
+        let targetSection = 'show'; // Por defecto va al show
+
+        // Mapear cada segmento a su sección correspondiente
+        const segmentSections = {
+            'municipal': 'clientes',      // Municipales ven clientes/gobiernos
+            'corporativo': 'servicios',   // Corporativos ven servicios
+            'festival': 'show'            // Festivales ven el show
+        };
+
+        if (segmentSections[segmentType]) {
+            targetSection = segmentSections[segmentType];
+        }
+
+        const section = document.getElementById(targetSection);
+        if (section) {
+            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+
+    // ==========================================
+    // MOBILE MENU
+    // ==========================================
+    function toggleMobileMenu() {
+        document.getElementById('mobileMenu').classList.toggle('open');
+    }
+
+    // ==========================================
+    // INITIALIZATION
+    // ==========================================
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // Header scroll effect
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('bg-black/95', 'backdrop-blur-md', 'border-b', 'border-white/5');
+            } else {
+                header.classList.remove('bg-black/95', 'backdrop-blur-md', 'border-b', 'border-white/5');
+            }
+        });
+        
+        // Fade in animations
+        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+        
+        // Track PageView
+        trackEvent('PageView', { page_title: document.title });
+        
+        // Scroll depth tracking
+        let scrollTracked = { 25: false, 50: false, 75: false, 100: false };
+        window.addEventListener('scroll', () => {
+            const scrollPercent = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
+            [25, 50, 75, 100].forEach(threshold => {
+                if (scrollPercent >= threshold && !scrollTracked[threshold]) {
+                    scrollTracked[threshold] = true;
+                    trackEvent('ScrollDepth', { depth: threshold });
+                }
+            });
+        });
+        
+        // Time on page
+        let timeOnPage = 0;
+        setInterval(() => {
+            timeOnPage += 30;
+            if (timeOnPage === 60) trackEvent('TimeOnPage', { seconds: 60 });
+            if (timeOnPage === 180) trackEvent('TimeOnPage', { seconds: 180 });
+        }, 30000);
+        
+        // Active nav link
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                if (window.scrollY >= section.offsetTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('text-neon');
+                link.classList.add('text-white/60');
+                if (link.getAttribute('data-section') === current) {
+                    link.classList.add('text-neon');
+                    link.classList.remove('text-white/60');
+                }
+            });
+        });
+        
+        // ==========================================
+        // TESTIMONIAL VIEW TRACKING
+        // ==========================================
+        const testimonialObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const card = entry.target;
+                    const testimonialName = card.dataset.testimonial;
+                    const testimonialIndex = card.dataset.index;
+                    
+                    trackEvent('TestimonialView', {
+                        testimonial_name: testimonialName,
+                        testimonial_index: testimonialIndex,
+                        source: 'testimonials_section'
+                    });
+                    
+                    testimonialObserver.unobserve(card);
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        document.querySelectorAll('.testimonial-card').forEach(card => {
+            testimonialObserver.observe(card);
+        });
+        
+        // ==========================================
+        // GALLERY VIEW TRACKING (mejorado)
+        // ==========================================
+        const galleryObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const item = entry.target;
+                    const galleryItem = item.dataset.gallery;
+                    const galleryType = item.dataset.type;
+                    
+                    if (galleryItem) {
+                        trackEvent('GalleryView', {
+                            item: galleryItem,
+                            type: galleryType || 'image',
+                            view_method: 'scroll',
+                            source: 'gallery_section'
+                        });
+                    }
+                    
+                    galleryObserver.unobserve(item);
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        document.querySelectorAll('[data-gallery]').forEach(item => {
+            galleryObserver.observe(item);
+        });
+        
+        // ==========================================
+        // FORM SUBMIT TRACKING
+        // ==========================================
+        const contactForm = document.getElementById('contactForm');
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(contactForm);
+                const data = {
+                    nombre: formData.get('nombre'),
+                    email: formData.get('email'),
+                    telefono: formData.get('telefono'),
+                    tipo_evento: formData.get('tipo_evento'),
+                    servicio: formData.get('servicio'),
+                    fecha: formData.get('fecha'),
+                    mensaje: formData.get('mensaje')
+                };
+                
+                // Get segment from session if available
+                const userSegment = sessionStorage.getItem('user_segment') || data.tipo_evento;
+                const leadQuality = sessionStorage.getItem('lead_quality') || 'warm';
+                
+                // Show loading
+                const submitBtn = document.getElementById('submitBtn');
+                const btnText = document.getElementById('btnText');
+                const btnSpinner = document.getElementById('btnSpinner');
+                
+                btnText.textContent = 'Enviando...';
+                btnSpinner.classList.remove('hidden');
+                submitBtn.disabled = true;
+                
+                // Generate unique event_id for deduplication
+                const eventId = generateEventId();
+
+                // Preparar user_data para Facebook CAPI
+                const userData = {
+                    email: data.email,
+                    phone_number: data.telefono,
+                    first_name: data.nombre.split(' ')[0],
+                    last_name: data.nombre.split(' ').slice(1).join(' ') || data.nombre,
+                    external_id: eventId
+                };
+
+                // Capturar cookies _fbp y _fbc si existen
+                const fbp = getCookie('_fbp');
+                const fbc = getCookie('_fbc');
+                if (fbp) userData.fbp = fbp;
+                if (fbc) userData.fbc = fbc;
+
+                // Track FormSubmit event
+                trackEvent('FormSubmit', {
+                    form_name: 'contact_form',
+                    segment_type: userSegment,
+                    service_interest: data.servicio,
+                    lead_quality: leadQuality,
+                    has_date: data.fecha ? 'yes' : 'no',
+                    has_message: data.mensaje ? 'yes' : 'no',
+                    event_id: eventId
+                }, userData);
+
+                // Track as Lead (evento estándar de Meta)
+                trackEvent('Lead', {
+                    content_name: 'contact_form',
+                    content_category: userSegment,
+                    client_type: data.servicio,
+                    value: data.servicio === 'paquete_completo' ? 100 : 50,
+                    currency: 'ARS',
+                    event_id: eventId
+                }, userData);
+                
+                // Simular envío (reemplazar con tu endpoint real)
+                // Por ejemplo: Google Apps Script, HubSpot API, etc.
+                const webhookUrl = 'https://script.google.com/macros/s/TU_SCRIPT_ID/exec';
+                
+                fetch(webhookUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                })
+                .then(() => {
+                    // Success
+                    btnText.textContent = '¡Enviado!';
+                    btnSpinner.classList.add('hidden');
+                    document.getElementById('formSuccess').classList.remove('hidden');
+                    contactForm.reset();
+
+                    // Track success (same event_id for deduplication)
+                    trackEvent('FormSubmitSuccess', {
+                        form_name: 'contact_form',
+                        segment_type: userSegment,
+                        event_id: eventId
+                    });
+
+                    // Reset button after 3s
+                    setTimeout(() => {
+                        btnText.textContent = 'Enviar Solicitud';
+                        submitBtn.disabled = false;
+                    }, 3000);
+                })
+                .catch((error) => {
+                    // Error
+                    btnText.textContent = 'Error';
+                    btnSpinner.classList.add('hidden');
+                    document.getElementById('formError').classList.remove('hidden');
+
+                    // Track error (same event_id for deduplication)
+                    trackEvent('FormSubmitError', {
+                        form_name: 'contact_form',
+                        error: error.message || 'unknown',
+                        event_id: eventId
+                    });
+
+                    // Reset button after 3s
+                    setTimeout(() => {
+                        btnText.textContent = 'Enviar Solicitud';
+                        submitBtn.disabled = false;
+                        document.getElementById('formError').classList.add('hidden');
+                    }, 3000);
+                });
+            });
+        }
+    });
+    </script>
+    <?php
+}
+add_action('wp_footer', 'dk_footer_scripts');
+
+/**
+ * Get WhatsApp URL
+ */
+function dk_whatsapp_url($message = '') {
+    $data = dk_get_site_data();
+    $phone = preg_replace('/[^0-9]/', '', $data['whatsapp']);
+    $url = 'https://wa.me/' . $phone;
+    if ($message) {
+        $url .= '?text=' . urlencode($message);
+    }
+    return $url;
+}
+
+/**
+ * Body Classes
+ */
+function dk_body_classes($classes) {
+    $classes[] = 'bg-dark';
+    $classes[] = 'text-white';
+    $classes[] = 'font-sans';
+    return $classes;
+}
+add_filter('body_class', 'dk_body_classes');
