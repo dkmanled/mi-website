@@ -1,0 +1,171 @@
+/*
+Theme Name: DK Laserman 2026
+Theme URI: https://laserman.com.ar
+Author: Nicolas Kollrich
+Author URI: https://laserman.com.ar
+Description: Tema profesional para DK Laserman - Show láser único en Latinoamérica. Diseño dark/neon optimizado para conversión y tracking de eventos.
+Version: 2026.01
+Requires at least: 6.0
+Tested up to: 6.7
+Requires PHP: 8.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: dk-laserman
+Tags: dark, neon, one-page, entertainment, events, laser-show, full-width
+*/
+
+/* Reset básico */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Variables CSS */
+:root {
+    --neon: #00ff1d;
+    --neon-rgb: 0, 255, 29;
+    --dark: #090f0a;
+    --surface: #0c140d;
+    --white: #ffffff;
+}
+
+/* Base */
+html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+}
+
+body {
+    background-color: var(--dark);
+    color: var(--white);
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Utility Classes */
+.container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+/* Neon Effects */
+.neon-glow {
+    text-shadow: 
+        0 0 10px rgba(var(--neon-rgb), 0.5),
+        0 0 20px rgba(var(--neon-rgb), 0.3);
+}
+
+.neon-box {
+    box-shadow: 0 0 30px rgba(var(--neon-rgb), 0.2);
+}
+
+/* Animations */
+.fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.card-hover {
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-hover:hover {
+    transform: translateY(-8px);
+}
+
+/* Mobile Menu */
+.mobile-menu {
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+}
+
+.mobile-menu.open {
+    transform: translateX(0);
+}
+
+/* Glow Pulse Animation */
+@keyframes glowPulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(var(--neon-rgb), 0.3); }
+    50% { box-shadow: 0 0 40px rgba(var(--neon-rgb), 0.6); }
+}
+
+.animate-glow-pulse {
+    animation: glowPulse 2s ease-in-out infinite;
+}
+
+/* Background Pattern */
+.bg-pattern {
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(var(--neon-rgb), 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 50%, rgba(var(--neon-rgb), 0.03) 0%, transparent 50%);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--dark);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(var(--neon-rgb), 0.2);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(var(--neon-rgb), 0.4);
+}
+
+/* WordPress Admin Bar Fix */
+body.admin-bar #header {
+    top: 32px;
+}
+
+@media screen and (max-width: 782px) {
+    body.admin-bar #header {
+        top: 46px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    body {
+        background: white;
+        color: black;
+    }
+    
+    #header,
+    .mobile-menu,
+    a[href*="wa.me"] {
+        display: none !important;
+    }
+}

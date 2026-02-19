@@ -1,0 +1,725 @@
+<?php
+/**
+ * Main Template - DK Laserman
+ */
+get_header();
+$data = dk_get_site_data();
+?>
+
+<!-- ============================================ -->
+<!-- HERO -->
+<!-- ============================================ -->
+<section id="inicio" class="h-screen relative flex items-center justify-center overflow-hidden">
+    <!-- Background -->
+    <img src="<?php echo esc_url($data['hero_image']); ?>"
+         alt="Show Laserman"
+         class="absolute inset-0 w-full h-full object-cover opacity-20 grayscale scale-105">
+
+    <div class="container mx-auto px-6 relative z-10 text-center fade-in">
+        <!-- Pretitle -->
+        <h2 class="text-neon text-[10px] md:text-xs font-black tracking-[0.8em] uppercase mb-8 animate-pulse">
+            ÚNICO EN LATINOAMÉRICA
+        </h2>
+
+        <!-- Main Title -->
+        <h1 class="text-4xl md:text-6xl lg:text-8xl xl:text-9xl font-black uppercase font-display tracking-tighter mb-10 leading-none">
+            EL SHOW <span class="neon-glow text-neon">LASERMAN</span><br>
+            MÁS VIRAL DE <span class="neon-glow text-neon">ARGENTINA</span>
+        </h1>
+
+        <!-- Subtitle -->
+        <p class="text-white/40 text-sm md:text-base max-w-2xl mx-auto mb-14 uppercase tracking-[0.2em] font-light leading-relaxed">
+            Manipulación láser en vivo • Único en Latinoamérica • Contenido viral garantizado
+        </p>
+
+        <!-- CTAs -->
+        <div class="flex flex-col sm:flex-row gap-6 justify-center">
+            <a href="#show"
+               onclick="trackEvent('ViewContent', {content_name: 'show_section', source: 'hero_cta'})"
+               class="px-10 py-4 bg-neon text-black font-black uppercase tracking-widest text-[10px] rounded-full hover:scale-105 transition-all shadow-lg shadow-neon/20 no-underline inline-block">
+                VER EL SHOW
+            </a>
+            <a href="<?php echo dk_whatsapp_url('Hola, quiero información sobre el Show Laserman'); ?>"
+               target="_blank"
+               onclick="trackEvent('InitiateContact', {method: 'whatsapp', source: 'hero_cta', lead_quality: 'hot'})"
+               class="px-10 py-4 border border-white/10 text-white font-black uppercase tracking-widest text-[10px] rounded-full hover:bg-white/5 transition-all no-underline inline-block">
+                COTIZAR AHORA
+            </a>
+        </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-30">
+        <span class="text-[8px] uppercase tracking-[0.5em] font-bold">Explorar</span>
+        <div class="w-[1px] h-12 bg-gradient-to-b from-neon to-transparent"></div>
+    </div>
+</section>
+
+<!-- STATS -->
+<section class="py-16 bg-white/[0.02] border-y border-white/5">
+    <div class="container mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
+        <div>
+            <div class="text-3xl md:text-5xl font-black text-neon mb-2">15+</div>
+            <div class="text-[9px] text-white/30 uppercase font-bold tracking-widest">AÑOS DE EXPERIENCIA</div>
+        </div>
+        <div>
+            <div class="text-3xl md:text-5xl font-black text-neon mb-2">50+</div>
+            <div class="text-[9px] text-white/30 uppercase font-bold tracking-widest">FIESTAS NACIONALES</div>
+        </div>
+        <div>
+            <div class="text-3xl md:text-5xl font-black text-neon mb-2">#1</div>
+            <div class="text-[9px] text-white/30 uppercase font-bold tracking-widest">EN LATINOAMÉRICA</div>
+        </div>
+        <div>
+            <div class="text-3xl md:text-5xl font-black text-neon mb-2">∞</div>
+            <div class="text-[9px] text-white/30 uppercase font-bold tracking-widest">CONTENIDO VIRAL</div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================ -->
+<!-- SEGMENTACIÓN -->
+<!-- ============================================ -->
+<section id="segmentos" class="py-20 bg-surface/80 border-y border-white/5">
+    <div class="container mx-auto px-6">
+        
+        <div class="text-center mb-12 fade-up">
+            <p class="text-neon text-xs font-bold uppercase tracking-widest mb-4">Experiencias Personalizadas</p>
+            <h2 class="text-3xl md:text-4xl font-display font-bold mb-4">
+                ¿Qué tipo de <span class="text-neon">evento</span> organizás?
+            </h2>
+            <p class="text-white/50 max-w-xl mx-auto">
+                Seleccioná tu categoría para ver propuestas adaptadas a tus necesidades
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 max-w-5xl mx-auto">
+            <?php foreach ($data['segments'] as $segment) : ?>
+            <button onclick="selectSegment('<?php echo esc_attr($segment['id']); ?>', '<?php echo esc_attr($segment['quality']); ?>')" 
+                    class="fade-up segment-btn card-hover group p-5 md:p-6 bg-black border-2 rounded-xl text-left transition-all
+                           <?php echo $segment['enabled'] 
+                               ? 'border-white/10 hover:border-neon hover:bg-neon/5' 
+                               : 'border-white/5 opacity-40 hover:opacity-60 cursor-not-allowed'; ?>">
+                <div class="text-3xl md:text-4xl mb-3 <?php echo !$segment['enabled'] ? 'grayscale' : ''; ?>">
+                    <?php echo $segment['icon']; ?>
+                </div>
+                <h3 class="text-base md:text-lg font-bold <?php echo $segment['enabled'] ? 'text-white group-hover:text-neon' : 'text-white/50'; ?> transition-colors">
+                    <?php echo esc_html($segment['title']); ?>
+                </h3>
+                <p class="text-xs md:text-sm text-white/40 mt-1"><?php echo esc_html($segment['subtitle']); ?></p>
+                
+                <?php if ($segment['enabled']) : ?>
+                <div class="mt-3 flex items-center gap-1 text-neon text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span>Ver propuesta</span>
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </div>
+                <?php else : ?>
+                <div class="mt-3 text-[10px] text-red-400/60 font-medium">No disponible</div>
+                <?php endif; ?>
+            </button>
+            <?php endforeach; ?>
+        </div>
+        
+        <!-- Excluded message -->
+        <div id="excludedMessage" class="hidden mt-8 max-w-xl mx-auto p-6 bg-red-950/30 border border-red-500/20 rounded-xl text-center">
+            <p class="text-red-400/80 mb-3 font-medium">
+                Actualmente no realizamos shows para eventos sociales privados.
+            </p>
+            <p class="text-white/40 text-sm">
+                Nuestro espectáculo está diseñado para eventos masivos con requerimientos técnicos específicos.
+            </p>
+        </div>
+        
+    </div>
+</section>
+
+<!-- ============================================ -->
+<!-- EL SHOW -->
+<!-- ============================================ -->
+<section id="show" class="py-32 relative">
+    <div class="container mx-auto px-6 text-center">
+
+        <!-- Pretitle -->
+        <h3 class="text-neon text-[10px] md:text-xs font-black tracking-[0.8em] uppercase mb-8">
+            EL SHOW
+        </h3>
+
+        <!-- Title -->
+        <h2 class="text-4xl md:text-6xl lg:text-7xl font-black uppercase font-display tracking-tighter mb-10 leading-none max-w-5xl mx-auto">
+            MANIPULACIÓN <span class="neon-glow text-neon">LÁSER</span><br>
+            EN TIEMPO <span class="neon-glow text-neon">REAL</span>
+        </h2>
+
+        <!-- Description -->
+        <p class="text-white/40 text-sm md:text-base max-w-3xl mx-auto mb-16 uppercase tracking-[0.2em] font-light leading-relaxed">
+            El artista controla rayos de luz sincronizados con música • Performance en vivo • El momento más filmado de cualquier evento
+        </p>
+
+        <!-- Video Grid -->
+        <div class="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto mb-12">
+            <!-- Video 1 -->
+            <a href="<?php echo esc_url($data['laserman_video']); ?>"
+               target="_blank"
+               onclick="trackEvent('VideoPlay', {video_name: 'laserman_main', source: 'show_section'})"
+               class="group relative aspect-[9/16] rounded-lg overflow-hidden border border-white/10 hover:border-neon/50 transition-all">
+                <img src="<?php echo esc_url($data['hero_image']); ?>"
+                     alt="Show Laserman"
+                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                    <div class="w-16 h-16 bg-neon/90 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-black ml-1" fill="currentColor" viewBox="0 0 24 24">
+                            <polygon points="5 3 19 12 5 21 5 3"/>
+                        </svg>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Video 2 -->
+            <a href="<?php echo esc_url($data['laserman_video']); ?>"
+               target="_blank"
+               onclick="trackEvent('VideoPlay', {video_name: 'laserman_2', source: 'show_section'})"
+               class="group relative aspect-[9/16] rounded-lg overflow-hidden border border-white/10 hover:border-neon/50 transition-all">
+                <img src="<?php echo esc_url($data['hero_image']); ?>"
+                     alt="Show Laserman"
+                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                    <div class="w-16 h-16 bg-neon/90 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-black ml-1" fill="currentColor" viewBox="0 0 24 24">
+                            <polygon points="5 3 19 12 5 21 5 3"/>
+                        </svg>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Video 3 -->
+            <a href="<?php echo esc_url($data['laserman_video']); ?>"
+               target="_blank"
+               onclick="trackEvent('VideoPlay', {video_name: 'laserman_3', source: 'show_section'})"
+               class="group relative aspect-[9/16] rounded-lg overflow-hidden border border-white/10 hover:border-neon/50 transition-all">
+                <img src="<?php echo esc_url($data['hero_image']); ?>"
+                     alt="Show Laserman"
+                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                    <div class="w-16 h-16 bg-neon/90 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-black ml-1" fill="currentColor" viewBox="0 0 24 24">
+                            <polygon points="5 3 19 12 5 21 5 3"/>
+                        </svg>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- CTA -->
+        <a href="<?php echo dk_whatsapp_url('Hola, quiero cotizar el Show Laserman'); ?>"
+           target="_blank"
+           onclick="trackEvent('InitiateContact', {method: 'whatsapp', service: 'laserman', source: 'show_section', lead_quality: 'hot'})"
+           class="inline-block px-10 py-4 bg-neon text-black font-black uppercase tracking-widest text-[10px] rounded-full hover:scale-105 transition-all shadow-lg shadow-neon/20">
+            COTIZAR SHOW
+        </a>
+
+    </div>
+</section>
+
+<!-- ============================================ -->
+<!-- SERVICIOS -->
+<!-- ============================================ -->
+<section id="servicios" class="py-24 bg-surface/50 border-y border-white/5">
+    <div class="container mx-auto px-6">
+        
+        <div class="text-center mb-16">
+            <p class="fade-up text-neon text-xs font-bold uppercase tracking-widest mb-4">Potenciá tu evento</p>
+            <h2 class="fade-up text-3xl md:text-4xl font-display font-bold mb-4">
+                Servicios <span class="text-white/40">Complementarios</span>
+            </h2>
+            <p class="fade-up text-white/50 max-w-xl mx-auto">
+                Combiná el Show Laserman con estas experiencias para un impacto total
+            </p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <?php foreach ($data['services'] as $service) : ?>
+            <div class="fade-up card-hover group bg-black border border-white/10 rounded-xl overflow-hidden hover:border-neon/50 transition-all"
+                 onclick="trackEvent('ServiceInterest', {service: '<?php echo esc_attr($service['id']); ?>', source: 'services_section'})">
+                <div class="aspect-video overflow-hidden <?php echo empty($service['image']) ? 'bg-gradient-to-br from-neon/20 via-surface to-surface flex items-center justify-center' : ''; ?>">
+                    <?php if (!empty($service['image'])) : ?>
+                    <img src="<?php echo esc_url($service['image']); ?>" 
+                         alt="<?php echo esc_attr($service['title']); ?>"
+                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    <?php else : ?>
+                    <span class="text-6xl group-hover:scale-110 transition-transform">✨</span>
+                    <?php endif; ?>
+                </div>
+                <div class="p-5">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-xl"><?php echo $service['icon']; ?></span>
+                        <h3 class="font-bold text-white group-hover:text-neon transition-colors"><?php echo esc_html($service['title']); ?></h3>
+                    </div>
+                    <p class="text-sm text-white/50 mb-4"><?php echo esc_html($service['description']); ?></p>
+                    <a href="<?php echo dk_whatsapp_url('Hola, me interesa ' . $service['title']); ?>" 
+                       target="_blank"
+                       onclick="event.stopPropagation(); trackEvent('InitiateContact', {method: 'whatsapp', service: '<?php echo esc_attr($service['id']); ?>', lead_quality: 'warm'})"
+                       class="text-neon text-sm font-bold flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        Consultar <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+        
+        <!-- Package CTA -->
+        <div class="fade-up mt-16 max-w-3xl mx-auto p-8 bg-gradient-to-r from-neon/10 via-neon/5 to-neon/10 border border-neon/30 rounded-2xl text-center">
+            <h3 class="text-2xl md:text-3xl font-display font-bold mb-4">
+                ¿Querés el <span class="text-neon">paquete completo</span>?
+            </h3>
+            <p class="text-white/60 mb-6">
+                Show Laserman + Túneles + Mapping = La combinación perfecta para un evento inolvidable
+            </p>
+            <a href="<?php echo dk_whatsapp_url('Hola, quiero cotizar el paquete completo (Laserman + Túneles + Mapping)'); ?>" 
+               target="_blank"
+               onclick="trackEvent('InitiateContact', {method: 'whatsapp', service: 'paquete_completo', source: 'services_cta', lead_quality: 'hot'})"
+               class="inline-block px-8 py-4 bg-neon text-black font-bold rounded hover:bg-white transition-all">
+                Cotizar Paquete Completo
+            </a>
+        </div>
+        
+    </div>
+</section>
+
+<!-- ============================================ -->
+<!-- GALERÍA -->
+<!-- ============================================ -->
+<section id="galeria" class="py-24">
+    <div class="container mx-auto px-6">
+        
+        <div class="text-center mb-16">
+            <p class="fade-up text-neon text-xs font-bold uppercase tracking-widest mb-4">Portfolio</p>
+            <h2 class="fade-up text-3xl md:text-4xl font-display font-bold mb-4">
+                Momentos <span class="text-neon">Inolvidables</span>
+            </h2>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+
+            <!-- Main - Laserman -->
+            <div class="fade-up col-span-2 row-span-2 group relative aspect-square rounded-xl overflow-hidden cursor-pointer border-2 border-neon/30 hover:border-neon"
+                 data-gallery="laserman_main" data-type="video"
+                 onclick="trackEvent('GalleryView', {item: 'laserman_main', type: 'video', view_method: 'click'})">
+                <img src="<?php echo esc_url($data['hero_image']); ?>"
+                     alt="Show Laserman"
+                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
+                <div class="absolute bottom-6 left-6 right-6">
+                    <span class="text-neon text-xs font-bold uppercase tracking-[0.3em] block mb-2">⚡ SHOW PRINCIPAL</span>
+                    <h3 class="text-2xl md:text-3xl font-bold text-white leading-tight">LASERMAN EN VIVO</h3>
+                    <p class="text-white/60 text-sm mt-2">El único show de su tipo en Latinoamérica</p>
+                </div>
+                <a href="<?php echo esc_url($data['laserman_video']); ?>" target="_blank"
+                   onclick="event.stopPropagation(); trackEvent('VideoPlay', {video_name: 'laserman_gallery', source: 'gallery'})"
+                   class="absolute top-6 right-6 w-12 h-12 bg-neon/90 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:scale-110 shadow-lg shadow-neon/50">
+                    <svg class="w-5 h-5 text-black ml-0.5" fill="currentColor" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                </a>
+            </div>
+
+            <!-- Túneles -->
+            <div class="fade-up group relative aspect-square rounded-xl overflow-hidden cursor-pointer border border-white/10 hover:border-neon/50"
+                 data-gallery="tuneles" data-type="video"
+                 onclick="trackEvent('GalleryView', {item: 'tuneles', type: 'video', view_method: 'click'})">
+                <img src="<?php echo esc_url($data['tuneles_image']); ?>"
+                     alt="Túneles"
+                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <span class="absolute bottom-3 left-3 text-white text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity">🚪 Túneles Inmersivos</span>
+                <a href="<?php echo esc_url($data['tuneles_video']); ?>" target="_blank"
+                   onclick="event.stopPropagation(); trackEvent('VideoPlay', {video_name: 'tuneles', source: 'gallery'})"
+                   class="absolute top-3 right-3 w-8 h-8 bg-neon/90 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <svg class="w-3 h-3 text-black ml-0.5" fill="currentColor" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                </a>
+            </div>
+
+            <!-- Mapping -->
+            <div class="fade-up group relative aspect-square rounded-xl overflow-hidden cursor-pointer border border-white/10 hover:border-neon/50"
+                 data-gallery="mapping" data-type="image"
+                 onclick="trackEvent('GalleryView', {item: 'mapping', type: 'image', view_method: 'click'})">
+                <img src="<?php echo esc_url($data['mapping_image']); ?>"
+                     alt="Mapping"
+                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <span class="absolute bottom-3 left-3 text-white text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity">🏔️ Mapping Láser</span>
+            </div>
+
+            <!-- Sponsors -->
+            <div class="fade-up group relative aspect-square rounded-xl overflow-hidden cursor-pointer border border-white/10 hover:border-neon/50"
+                 data-gallery="sponsors" data-type="image"
+                 onclick="trackEvent('GalleryView', {item: 'sponsors', type: 'image', view_method: 'click'})">
+                <img src="<?php echo esc_url($data['sponsors_image']); ?>"
+                     alt="Sponsors"
+                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <span class="absolute bottom-3 left-3 text-white text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity">💰 Proyección Sponsors</span>
+            </div>
+
+            <!-- Custom -->
+            <div class="fade-up group relative aspect-square rounded-xl overflow-hidden cursor-pointer border border-white/10 hover:border-neon/50"
+                 data-gallery="experiencia" data-type="image"
+                 onclick="trackEvent('GalleryView', {item: 'experiencia', type: 'image', view_method: 'click'})">
+                <img src="<?php echo esc_url($data['custom_image']); ?>"
+                     alt="Experiencias"
+                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <span class="absolute bottom-3 left-3 text-white text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity">✨ Experiencias Custom</span>
+            </div>
+
+        </div>
+        
+    </div>
+</section>
+
+<!-- ============================================ -->
+<!-- CLIENTES -->
+<!-- ============================================ -->
+<section id="clientes" class="py-24 bg-surface/50 border-y border-white/5">
+    <div class="container mx-auto px-6">
+        
+        <div class="text-center mb-16">
+            <p class="fade-up text-neon text-xs font-bold uppercase tracking-widest mb-4">Trayectoria</p>
+            <h2 class="fade-up text-3xl md:text-4xl font-display font-bold mb-4">
+                Confían en <span class="text-neon">Nosotros</span>
+            </h2>
+            <p class="fade-up text-white/50">Gobiernos provinciales, fiestas nacionales y empresas de primer nivel</p>
+        </div>
+        
+        <!-- Gobiernos -->
+        <div class="fade-up mb-16">
+            <p class="text-center text-[10px] text-white/30 uppercase tracking-widest mb-8">Gobiernos Provinciales</p>
+            <div class="flex flex-wrap justify-center items-center gap-8 md:gap-12">
+                <img src="<?php echo esc_url($data['logo_rionegro']); ?>" alt="Río Negro" class="h-12 md:h-16 object-contain opacity-60 hover:opacity-100 transition-opacity">
+                <img src="<?php echo esc_url($data['logo_misiones']); ?>" alt="Misiones" class="h-12 md:h-16 object-contain opacity-60 hover:opacity-100 transition-opacity">
+                <img src="<?php echo esc_url($data['logo_formosa']); ?>" alt="Formosa" class="h-12 md:h-16 object-contain opacity-60 hover:opacity-100 transition-opacity">
+                <img src="<?php echo esc_url($data['logo_neuquen']); ?>" alt="Neuquén" class="h-12 md:h-16 object-contain opacity-60 hover:opacity-100 transition-opacity">
+            </div>
+        </div>
+        
+        <!-- Fiestas -->
+        <div class="fade-up">
+            <p class="text-center text-[10px] text-white/30 uppercase tracking-widest mb-8">Fiestas Nacionales</p>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
+                <?php foreach ($data['festivals'] as $festival) : ?>
+                <div class="p-4 bg-black/50 rounded-lg border-l-2 border-neon">
+                    <h4 class="font-bold text-white"><?php echo esc_html($festival['name']); ?></h4>
+                    <p class="text-sm text-white/40"><?php echo esc_html($festival['location']); ?></p>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        
+        <!-- Marcas -->
+        <div class="fade-up mt-16">
+            <p class="text-center text-[10px] text-white/30 uppercase tracking-widest mb-8">Marcas</p>
+            <div class="flex flex-wrap justify-center items-center gap-6 md:gap-10 opacity-50">
+                <?php foreach ($data['brand_logos'] as $logo) : ?>
+                <img src="<?php echo esc_url($logo); ?>" alt="Marca" class="h-10 object-contain">
+                <?php endforeach; ?>
+            </div>
+        </div>
+        
+    </div>
+</section>
+
+<!-- ============================================ -->
+<!-- IMPACTO NACIONAL -->
+<!-- ============================================ -->
+<section id="impacto" class="py-32 bg-white/[0.02] border-y border-white/5">
+    <div class="container mx-auto px-6 text-center">
+
+        <!-- Pretitle -->
+        <h3 class="text-neon text-[10px] md:text-xs font-black tracking-[0.8em] uppercase mb-8">
+            TRAYECTORIA
+        </h3>
+
+        <!-- Title -->
+        <h2 class="text-4xl md:text-6xl lg:text-7xl font-black uppercase font-display tracking-tighter mb-10 leading-none max-w-5xl mx-auto">
+            IMPACTO A NIVEL <span class="neon-glow text-neon">NACIONAL</span>
+        </h2>
+
+        <!-- Description -->
+        <p class="text-white/40 text-sm md:text-base max-w-3xl mx-auto mb-20 uppercase tracking-[0.2em] font-light leading-relaxed">
+            50+ fiestas nacionales • 4 gobiernos provinciales • El show más viral de Argentina
+        </p>
+
+        <!-- Fiestas Grid - Minimalista -->
+        <div class="grid md:grid-cols-3 gap-px bg-white/5 max-w-5xl mx-auto mb-20">
+            <?php
+            $fiestas_destacadas = array(
+                array('name' => 'Fiesta Nacional del Chocolate', 'location' => 'Bariloche'),
+                array('name' => 'Fiesta Nacional del Pionero', 'location' => 'Centenario'),
+                array('name' => 'Fiesta Nacional de la Navidad', 'location' => 'Misiones'),
+                array('name' => 'Fiesta Nacional del Tomate', 'location' => 'Lamarque'),
+                array('name' => 'Fiesta Nacional del Chef', 'location' => 'Villa Pehuenia'),
+                array('name' => 'Fiesta de la Actividad Física', 'location' => 'Cipolletti'),
+            );
+            foreach ($fiestas_destacadas as $fiesta) : ?>
+            <div class="p-8 bg-dark hover:bg-white/[0.02] transition-all">
+                <h4 class="font-bold text-white text-sm uppercase tracking-wide mb-2"><?php echo esc_html($fiesta['name']); ?></h4>
+                <p class="text-[10px] text-white/30 uppercase tracking-widest"><?php echo esc_html($fiesta['location']); ?></p>
+            </div>
+            <?php endforeach; ?>
+        </div>
+
+        <!-- Logos Gobiernos -->
+        <div class="flex flex-wrap justify-center items-center gap-12 opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all">
+            <img src="<?php echo esc_url($data['logo_rionegro']); ?>" alt="Río Negro" class="h-12 object-contain">
+            <img src="<?php echo esc_url($data['logo_misiones']); ?>" alt="Misiones" class="h-12 object-contain">
+            <img src="<?php echo esc_url($data['logo_formosa']); ?>" alt="Formosa" class="h-12 object-contain">
+            <img src="<?php echo esc_url($data['logo_neuquen']); ?>" alt="Neuquén" class="h-12 object-contain">
+        </div>
+
+    </div>
+</section>
+
+<!-- ============================================ -->
+<!-- TESTIMONIOS -->
+<!-- ============================================ -->
+<section id="testimonios" class="py-32">
+    <div class="container mx-auto px-6 text-center">
+
+        <!-- Pretitle -->
+        <h3 class="text-neon text-[10px] md:text-xs font-black tracking-[0.8em] uppercase mb-8">
+            TESTIMONIOS
+        </h3>
+
+        <!-- Title -->
+        <h2 class="text-4xl md:text-6xl lg:text-7xl font-black uppercase font-display tracking-tighter mb-20 leading-none max-w-5xl mx-auto">
+            LO QUE DICEN <span class="neon-glow text-neon">NUESTROS</span><br>
+            CLIENTES
+        </h2>
+
+        <!-- Testimonials Grid -->
+        <div class="grid md:grid-cols-3 gap-px bg-white/5 max-w-6xl mx-auto">
+            <?php $index = 0; foreach ($data['testimonials'] as $testimonial) : $index++; ?>
+            <div class="p-8 md:p-10 bg-dark hover:bg-white/[0.02] transition-all text-left"
+                 data-testimonial="<?php echo esc_attr($testimonial['name']); ?>"
+                 data-index="<?php echo $index; ?>">
+                <p class="text-white/60 italic mb-8 text-sm leading-relaxed">"<?php echo esc_html($testimonial['quote']); ?>"</p>
+                <div class="border-t border-white/5 pt-4">
+                    <p class="font-bold text-white text-sm uppercase tracking-wide"><?php echo esc_html($testimonial['name']); ?></p>
+                    <p class="text-[10px] text-white/30 uppercase tracking-widest mt-2"><?php echo esc_html($testimonial['role']); ?></p>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+
+    </div>
+</section>
+
+<!-- ============================================ -->
+<!-- CTA FINAL -->
+<!-- ============================================ -->
+<section class="py-16 bg-gradient-to-r from-neon/10 via-neon/5 to-neon/10 border-y border-neon/20">
+    <div class="container mx-auto px-6 text-center">
+        <div class="fade-up">
+            <span class="inline-block px-4 py-1 bg-neon/20 text-neon text-xs font-bold uppercase tracking-widest rounded-full mb-6">
+                Gira Nacional 2026
+            </span>
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-6">
+                ¿Listo para el <span class="text-neon neon-glow">impacto</span>?
+            </h2>
+            <p class="text-white/60 mb-8 max-w-xl mx-auto">
+                Reservá ahora tu fecha y llevá la experiencia láser más impactante de Argentina a tu evento.
+            </p>
+            <a href="<?php echo dk_whatsapp_url('Hola, quiero reservar una fecha para el Show Laserman'); ?>" 
+               target="_blank"
+               onclick="trackEvent('InitiateContact', {method: 'whatsapp', source: 'final_cta', lead_quality: 'hot'})"
+               class="inline-block px-10 py-4 bg-neon text-black font-bold text-lg rounded hover:bg-white transition-all transform hover:scale-105">
+                ¡Reservar Ahora!
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================ -->
+<!-- CONTACTO -->
+<!-- ============================================ -->
+<section id="contacto" class="py-24 bg-surface">
+    <div class="container mx-auto px-6">
+        
+        <div class="text-center mb-16">
+            <h2 class="fade-up text-3xl md:text-4xl font-display font-bold mb-6">
+                Contactanos
+            </h2>
+            <p class="fade-up text-white/50">
+                Estamos listos para hacer de tu evento algo inolvidable
+            </p>
+        </div>
+        
+        <div class="max-w-5xl mx-auto grid lg:grid-cols-2 gap-12">
+            
+            <!-- FORMULARIO -->
+            <div class="fade-up">
+                <div class="p-8 bg-black/50 border border-white/10 rounded-2xl">
+                    <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+                        <span class="w-2 h-2 bg-neon rounded-full"></span>
+                        Solicitar Cotización
+                    </h3>
+                    
+                    <form id="contactForm" class="space-y-5">
+                        
+                        <!-- Nombre -->
+                        <div>
+                            <label class="block text-sm text-white/50 mb-2">Nombre completo *</label>
+                            <input type="text" name="nombre" required
+                                   class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:border-neon focus:outline-none transition-colors"
+                                   placeholder="Tu nombre">
+                        </div>
+                        
+                        <!-- Email -->
+                        <div>
+                            <label class="block text-sm text-white/50 mb-2">Email *</label>
+                            <input type="email" name="email" required
+                                   class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:border-neon focus:outline-none transition-colors"
+                                   placeholder="tu@email.com">
+                        </div>
+                        
+                        <!-- Teléfono -->
+                        <div>
+                            <label class="block text-sm text-white/50 mb-2">Teléfono / WhatsApp *</label>
+                            <input type="tel" name="telefono" required
+                                   class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:border-neon focus:outline-none transition-colors"
+                                   placeholder="+54 9 ...">
+                        </div>
+                        
+                        <!-- Tipo de Evento -->
+                        <div>
+                            <label class="block text-sm text-white/50 mb-2">Tipo de evento *</label>
+                            <select name="tipo_evento" required
+                                    class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:border-neon focus:outline-none transition-colors">
+                                <option value="" class="bg-dark">Seleccioná una opción</option>
+                                <option value="fiesta_nacional" class="bg-dark">🏛️ Fiesta Nacional / Municipal</option>
+                                <option value="corporativo" class="bg-dark">🏢 Evento Corporativo</option>
+                                <option value="festival" class="bg-dark">🎤 Festival / Productor</option>
+                                <option value="otro" class="bg-dark">✨ Otro</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Servicio de Interés -->
+                        <div>
+                            <label class="block text-sm text-white/50 mb-2">¿Qué servicio te interesa?</label>
+                            <select name="servicio" 
+                                    class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:border-neon focus:outline-none transition-colors">
+                                <option value="laserman" class="bg-dark">⚡ Show Laserman</option>
+                                <option value="paquete_completo" class="bg-dark">🎯 Paquete Completo</option>
+                                <option value="tuneles" class="bg-dark">🚪 Túneles de Ingreso</option>
+                                <option value="mapping" class="bg-dark">🏔️ Mapping Láser</option>
+                                <option value="sponsors" class="bg-dark">💰 Proyección Sponsors</option>
+                                <option value="custom" class="bg-dark">🎨 Experiencia Custom</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Fecha aproximada -->
+                        <div>
+                            <label class="block text-sm text-white/50 mb-2">Fecha aproximada del evento</label>
+                            <input type="text" name="fecha"
+                                   class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:border-neon focus:outline-none transition-colors"
+                                   placeholder="Ej: Marzo 2026">
+                        </div>
+                        
+                        <!-- Mensaje -->
+                        <div>
+                            <label class="block text-sm text-white/50 mb-2">Mensaje (opcional)</label>
+                            <textarea name="mensaje" rows="3"
+                                      class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:border-neon focus:outline-none transition-colors resize-none"
+                                      placeholder="Contanos más sobre tu evento..."></textarea>
+                        </div>
+                        
+                        <!-- Submit -->
+                        <button type="submit" id="submitBtn"
+                                class="w-full py-4 bg-neon text-black font-bold text-lg rounded-lg hover:bg-white transition-all flex items-center justify-center gap-2">
+                            <span id="btnText">Enviar Solicitud</span>
+                            <svg id="btnSpinner" class="hidden w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </button>
+                        
+                        <!-- Status messages -->
+                        <div id="formSuccess" class="hidden p-4 bg-neon/20 border border-neon/50 rounded-lg text-center">
+                            <p class="text-neon font-bold">✓ ¡Mensaje enviado!</p>
+                            <p class="text-white/60 text-sm mt-1">Te contactaremos a la brevedad.</p>
+                        </div>
+                        
+                        <div id="formError" class="hidden p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-center">
+                            <p class="text-red-400 font-bold">✗ Error al enviar</p>
+                            <p class="text-white/60 text-sm mt-1">Por favor intentá por WhatsApp.</p>
+                        </div>
+                        
+                    </form>
+                </div>
+            </div>
+            
+            <!-- OPCIONES RÁPIDAS -->
+            <div class="fade-up space-y-6">
+                
+                <!-- WhatsApp -->
+                <a href="<?php echo dk_whatsapp_url('Hola, quiero información sobre sus servicios'); ?>" 
+                   target="_blank"
+                   onclick="trackEvent('InitiateContact', {method: 'whatsapp', source: 'contact_section'})"
+                   class="card-hover block p-6 bg-[#25D366] rounded-xl text-white hover:bg-[#128C7E] transition-colors">
+                    <div class="flex items-center gap-4">
+                        <div class="text-4xl">💬</div>
+                        <div>
+                            <h3 class="text-xl font-bold">WhatsApp</h3>
+                            <p class="text-white/80 text-sm">Respuesta inmediata</p>
+                            <p class="font-bold mt-1"><?php echo esc_html($data['whatsapp_display']); ?></p>
+                        </div>
+                    </div>
+                </a>
+                
+                <!-- Teléfono -->
+                <a href="tel:<?php echo esc_attr($data['whatsapp']); ?>"
+                   onclick="trackEvent('InitiateContact', {method: 'phone', source: 'contact_section'})"
+                   class="card-hover block p-6 bg-black border border-white/20 rounded-xl text-white hover:border-neon hover:bg-neon/5 transition-all">
+                    <div class="flex items-center gap-4">
+                        <div class="text-4xl">📞</div>
+                        <div>
+                            <h3 class="text-xl font-bold">Llamar Ahora</h3>
+                            <p class="text-white/50 text-sm">Hablar con producción</p>
+                            <p class="font-bold mt-1"><?php echo esc_html($data['phone']); ?></p>
+                        </div>
+                    </div>
+                </a>
+                
+                <!-- Email -->
+                <a href="mailto:<?php echo esc_attr($data['email']); ?>"
+                   onclick="trackEvent('InitiateContact', {method: 'email', source: 'contact_section'})"
+                   class="card-hover block p-6 bg-black border border-white/20 rounded-xl text-white hover:border-neon hover:bg-neon/5 transition-all">
+                    <div class="flex items-center gap-4">
+                        <div class="text-4xl">✉️</div>
+                        <div>
+                            <h3 class="text-xl font-bold">Email</h3>
+                            <p class="text-white/50 text-sm">Para propuestas formales</p>
+                            <p class="font-bold mt-1"><?php echo esc_html($data['email']); ?></p>
+                        </div>
+                    </div>
+                </a>
+                
+                <!-- Info adicional -->
+                <div class="p-6 bg-white/5 rounded-xl border border-white/10">
+                    <h4 class="font-bold text-white mb-3">📍 Cobertura</h4>
+                    <p class="text-white/50 text-sm mb-4">
+                        Realizamos shows en todo el país. Base de operaciones en Neuquén, Patagonia Argentina.
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-neon/10 text-neon text-xs rounded-full">Neuquén</span>
+                        <span class="px-3 py-1 bg-neon/10 text-neon text-xs rounded-full">Buenos Aires</span>
+                        <span class="px-3 py-1 bg-neon/10 text-neon text-xs rounded-full">Patagonia</span>
+                        <span class="px-3 py-1 bg-neon/10 text-neon text-xs rounded-full">Todo el país</span>
+                    </div>
+                </div>
+                
+            </div>
+            
+        </div>
+        
+    </div>
+</section>
+
+<?php get_footer(); ?>
